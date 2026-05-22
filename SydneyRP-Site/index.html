@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Règlements du Serveur</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="assets/logo.svg" type="image/svg+xml" />
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <div class="logo-area">
+        <img src="assets/logo.png" alt="Logo" class="header-logo" onerror="this.src='assets/logo.svg'" />
+        <span class="server-name" id="serverNameHeader">Mon Serveur</span>
+      </div>
+      <nav>
+        <a href="staff.html">👮 Staff</a>
+        <a href="sanctions.html">⚠️ Sanctions</a>
+        <a href="faq.html">❓ FAQ</a>
+        <a href="changelog.html">📋 Changelog</a>
+        <a href="#" id="navDiscordLink" class="btn-discord" style="display:none" target="_blank" rel="noopener">💬 Discord</a>
+        <button id="themeToggle" class="btn-theme" title="Changer le thème">🌙</button>
+        <a href="admin.html" class="btn-admin">⚙ Admin</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-content">
+      <img src="assets/logo.png" alt="Logo" class="hero-logo" onerror="this.src='assets/logo.svg'" />
+      <h1 id="heroTitle">Règlements Sydney RP</h1>
+      <p id="heroSubtitle">Bienvenue ! Veuillez lire attentivement tous les règlements avant de jouer.</p>
+    </div>
+  </section>
+
+  <!-- BARRE DE RECHERCHE -->
+  <div class="search-bar-wrapper">
+    <div class="search-bar">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="globalSearch" placeholder="Rechercher une règle..." oninput="handleSearch()" />
+      <button id="clearSearch" class="search-clear hidden" onclick="clearSearch()">✕</button>
+    </div>
+  </div>
+
+  <!-- RÉSULTATS DE RECHERCHE -->
+  <div class="search-results hidden" id="searchResults"></div>
+
+  <!-- CARTES CATÉGORIES -->
+  <main class="container" id="categoriesContainer"></main>
+
+  <!-- BANNIÈRE RECRUTEMENT STAFF -->
+  <section class="recruit-banner" id="recruitBanner" style="display:none">
+    <div class="recruit-inner">
+      <div class="recruit-text">
+        <span class="recruit-icon">👮</span>
+        <div>
+          <strong id="recruitTitle">Rejoins l'équipe Staff !</strong>
+          <p id="recruitDesc">Le recrutement est ouvert. Clique pour postuler.</p>
+        </div>
+      </div>
+      <a href="candidature.html" class="btn btn-recruit">Postuler →</a>
+    </div>
+  </section>
+
+  <!-- LIENS RAPIDES -->
+  <section class="quick-links-section">
+    <div class="quick-links-inner">
+      <a href="staff.html"     class="quick-link">👮 Équipe Staff</a>
+      <a href="sanctions.html" class="quick-link">⚠️ Sanctions</a>
+      <a href="faq.html"       class="quick-link">❓ FAQ</a>
+      <a href="changelog.html" class="quick-link">📋 Changelog</a>
+    </div>
+  </section>
+
+  <footer>
+    <p id="footerText">© 2026 Mon Serveur — Tous droits réservés</p>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

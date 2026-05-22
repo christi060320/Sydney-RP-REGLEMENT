@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Administration — Règlements</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="admin.css" />
+  <link rel="icon" href="assets/logo.svg" type="image/svg+xml" />
+</head>
+<body class="admin-body">
+
+  <!-- LOGIN OVERLAY -->
+  <div id="loginOverlay" class="login-overlay">
+    <div class="login-box">
+      <img src="assets/logo.png" alt="Logo" class="login-logo" onerror="this.src='assets/logo.svg'" />
+      <h2 id="loginServerName">Mon Serveur</h2>
+      <h3>Panneau d'Administration</h3>
+      <form id="loginForm">
+        <div class="form-group">
+          <label>Nom d'utilisateur</label>
+          <input type="text" id="loginUser" placeholder="Identifiant admin" required />
+        </div>
+        <div class="form-group">
+          <label>Mot de passe</label>
+          <input type="password" id="loginPass" placeholder="Mot de passe" required />
+        </div>
+        <p class="login-error" id="loginError"></p>
+        <button type="submit" class="btn btn-primary btn-full">Se connecter</button>
+      </form>
+      <a href="index.html" class="back-link">← Retour au site</a>
+    </div>
+  </div>
+
+  <!-- ADMIN PANEL -->
+  <div id="adminPanel" class="admin-panel hidden">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <img src="assets/logo.png" alt="Logo" class="sidebar-logo" onerror="this.src='assets/logo.svg'" />
+        <div>
+          <div class="sidebar-server-name" id="sidebarServerName">Mon Serveur</div>
+          <div class="sidebar-user">Connecté : <span id="currentAdminName">admin</span></div>
+          <span id="sidebarRoleBadge" class="role-badge role-admin">Admin</span>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <button class="nav-btn active" data-tab="dashboard">🏠 Tableau de bord</button>
+        <button class="nav-btn" data-tab="categories">📋 Catégories</button>
+        <button class="nav-btn" data-tab="rules">📝 Règles</button>
+        <button class="nav-btn" data-tab="admins">👥 Administrateurs</button>
+        <button class="nav-btn" data-tab="recruitment">👮 Recrutement Staff</button>
+        <button class="nav-btn" data-tab="staffmembers">⭐ Équipe Staff</button>
+        <button class="nav-btn" data-tab="sanctions">⚠️ Sanctions</button>
+        <button class="nav-btn" data-tab="faqadmin">❓ FAQ</button>
+        <button class="nav-btn" data-tab="changelogadmin">📋 Changelog</button>
+        <button class="nav-btn" data-tab="actionlog">🕓 Historique</button>
+        <button class="nav-btn" data-tab="settings">⚙ Paramètres</button>
+      </nav>
+      <div class="sidebar-footer">
+        <a href="index.html" class="btn-sidebar-link">👁 Voir le site</a>
+        <button id="logoutBtn" class="btn-logout">🚪 Déconnexion</button>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <div class="admin-main">
+
+      <!-- DASHBOARD -->
+      <section id="tab-dashboard" class="tab-content active">
+        <h2>Tableau de bord</h2>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">📋</div>
+            <div class="stat-info">
+              <div class="stat-number" id="statCategories">0</div>
+              <div class="stat-label">Catégories</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">📝</div>
+            <div class="stat-info">
+              <div class="stat-number" id="statRules">0</div>
+              <div class="stat-label">Règles</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">👥</div>
+            <div class="stat-info">
+              <div class="stat-number" id="statAdmins">0</div>
+              <div class="stat-label">Administrateurs</div>
+            </div>
+          </div>
+        </div>
+        <div class="quick-actions">
+          <h3>Actions rapides</h3>
+          <div class="quick-btns">
+            <button class="btn btn-primary" onclick="switchTab('categories'); openModal('modalAddCategory')">+ Nouvelle catégorie</button>
+            <button class="btn btn-secondary" onclick="switchTab('rules'); openModal('modalAddRule')">+ Nouvelle règle</button>
+            <button id="quickAddAdminBtn" class="btn btn-accent" onclick="switchTab('admins'); openModal('modalAddAdmin')">+ Nouvel admin</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- CATEGORIES -->
+      <section id="tab-categories" class="tab-content">
+        <div class="section-header">
+          <h2>Gestion des Catégories</h2>
+          <button class="btn btn-primary" onclick="openModal('modalAddCategory')">+ Ajouter une catégorie</button>
+        </div>
+        <div class="table-wrapper">
+          <table class="admin-table" id="categoriesTable">
+            <thead>
+              <tr>
+                <th>Icône</th>
+                <th>Nom</th>
+                <th>Couleur</th>
+                <th>Nb. Règles</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="categoriesTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- RULES -->
+      <section id="tab-rules" class="tab-content">
+        <div class="section-header">
+          <h2>Gestion des Règles</h2>
+          <button class="btn btn-primary" onclick="openModal('modalAddRule')">+ Ajouter une règle</button>
+        </div>
+        <div class="filter-bar">
+          <label>Filtrer par catégorie :</label>
+          <select id="filterCategory" onchange="renderRulesTable()">
+            <option value="">Toutes les catégories</option>
+          </select>
+        </div>
+        <div class="table-wrapper">
+          <table class="admin-table" id="rulesTable">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Catégorie</th>
+                <th>Titre</th>
+                <th>Description</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="rulesTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ADMINS -->
+      <section id="tab-admins" class="tab-content">
+        <div class="section-header">
+          <h2>Gestion des Administrateurs</h2>
+          <button class="btn btn-primary" onclick="openModal('modalAddAdmin')">+ Ajouter un admin</button>
+        </div>
+        <div class="table-wrapper">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Nom d'utilisateur</th>
+                <th>Rôle</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="adminsTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- RECRUTEMENT STAFF -->
+      <section id="tab-recruitment" class="tab-content">
+
+        <!-- Sous-onglets -->
+        <div class="recruit-tabs">
+          <button class="recruit-tab-btn active" data-rtab="applications">📨 Candidatures <span id="appCountBadge" class="app-badge">0</span></button>
+          <button class="recruit-tab-btn" data-rtab="questions">❓ Questions</button>
+          <button class="recruit-tab-btn" data-rtab="recruitSettings">⚙ Paramètres</button>
+        </div>
+
+        <!-- Candidatures -->
+        <div id="rtab-applications" class="rtab-content active">
+          <div class="section-header" style="margin-top:20px">
+            <h2>Candidatures reçues</h2>
+            <div style="display:flex;gap:8px;align-items:center">
+              <select id="filterAppStatus" onchange="renderApplications()" class="filter-select">
+                <option value="">Toutes</option>
+                <option value="pending">En attente</option>
+                <option value="accepted">Acceptées</option>
+                <option value="rejected">Refusées</option>
+              </select>
+            </div>
+          </div>
+          <div id="applicationsList"></div>
+        </div>
+
+        <!-- Questions -->
+        <div id="rtab-questions" class="rtab-content">
+          <div class="section-header" style="margin-top:20px">
+            <h2>Questions du formulaire</h2>
+            <button class="btn btn-primary" onclick="openAddQuestion()">+ Ajouter une question</button>
+          </div>
+          <div id="questionsList"></div>
+        </div>
+
+        <!-- Paramètres recrutement -->
+        <div id="rtab-recruitSettings" class="rtab-content">
+          <div style="margin-top:20px">
+            <h2>Paramètres du recrutement</h2>
+            <div class="settings-form" style="margin-top:20px">
+              <div class="form-group">
+                <label>Recrutement ouvert</label>
+                <div class="toggle-row">
+                  <label class="toggle-switch">
+                    <input type="checkbox" id="settingRecruitOpen" />
+                    <span class="toggle-slider"></span>
+                  </label>
+                  <span id="recruitOpenLabel" style="color:#888;font-size:14px">Fermé</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Titre de la bannière (page d'accueil)</label>
+                <input type="text" id="settingBannerTitle" placeholder="Rejoins l'équipe Staff !" />
+              </div>
+              <div class="form-group">
+                <label>Description de la bannière</label>
+                <input type="text" id="settingBannerDesc" placeholder="Le recrutement est ouvert. Clique pour postuler." />
+              </div>
+              <div class="form-group">
+                <label>Texte d'introduction (page candidature)</label>
+                <textarea id="settingStaffIntro" rows="3" placeholder="Présentation du poste, conditions requises..."></textarea>
+              </div>
+              <button class="btn btn-primary" onclick="saveRecruitSettings()">💾 Sauvegarder</button>
+              <p class="save-msg" id="recruitSaveMsg"></p>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ÉQUIPE STAFF -->
+      <section id="tab-staffmembers" class="tab-content">
+        <div class="section-header">
+          <h2>Équipe Staff</h2>
+          <button class="btn btn-primary" onclick="openModal('modalStaffMember')">+ Ajouter un membre</button>
+        </div>
+        <div class="table-wrapper">
+          <table class="admin-table">
+            <thead><tr><th>Avatar</th><th>Pseudo</th><th>Rôle</th><th>Description</th><th>Ordre</th><th>Actions</th></tr></thead>
+            <tbody id="staffMembersTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- SANCTIONS -->
+      <section id="tab-sanctions" class="tab-content">
+        <div class="section-header">
+          <h2>Tableau des Sanctions</h2>
+          <button class="btn btn-primary" onclick="openModal('modalSanction')">+ Ajouter une sanction</button>
+        </div>
+        <div class="table-wrapper">
+          <table class="admin-table">
+            <thead><tr><th>#</th><th>Infraction</th><th>Sanction</th><th>Gravité</th><th>Actions</th></tr></thead>
+            <tbody id="sanctionsTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- FAQ -->
+      <section id="tab-faqadmin" class="tab-content">
+        <div class="section-header">
+          <h2>FAQ</h2>
+          <button class="btn btn-primary" onclick="openModal('modalFaq')">+ Ajouter une question</button>
+        </div>
+        <div class="table-wrapper">
+          <table class="admin-table">
+            <thead><tr><th>#</th><th>Question</th><th>Réponse</th><th>Actions</th></tr></thead>
+            <tbody id="faqTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- CHANGELOG -->
+      <section id="tab-changelogadmin" class="tab-content">
+        <div class="section-header">
+          <h2>Changelog</h2>
+          <button class="btn btn-primary" onclick="openModal('modalChangelog')">+ Ajouter une entrée</button>
+        </div>
+        <div class="table-wrapper">
+          <table class="admin-table">
+            <thead><tr><th>Version</th><th>Date</th><th>Titre</th><th>Type</th><th>Actions</th></tr></thead>
+            <tbody id="changelogTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- HISTORIQUE DES ACTIONS -->
+      <section id="tab-actionlog" class="tab-content">
+        <div class="section-header">
+          <h2>Historique des actions</h2>
+          <button class="btn btn-secondary" onclick="clearActionLog()">🗑 Vider l'historique</button>
+        </div>
+        <div class="table-wrapper">
+          <table class="admin-table">
+            <thead><tr><th>Date</th><th>Admin</th><th>Action</th><th>Détail</th></tr></thead>
+            <tbody id="actionLogTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- SETTINGS -->
+      <section id="tab-settings" class="tab-content">
+        <h2>Paramètres du site</h2>
+        <div class="settings-form">
+          <div class="form-group">
+            <label>Nom du serveur</label>
+            <input type="text" id="settingServerName" placeholder="Nom de votre serveur" />
+          </div>
+          <div class="form-group">
+            <label>Sous-titre de la page d'accueil</label>
+            <input type="text" id="settingSubtitle" placeholder="Bienvenue ! Veuillez lire..." />
+          </div>
+          <div class="form-group">
+            <label>Texte du footer</label>
+            <input type="text" id="settingFooter" placeholder="© 2026 Mon Serveur..." />
+          </div>
+          <div class="form-group">
+            <label>URL du logo (laisser vide pour utiliser assets/logo.png)</label>
+            <input type="text" id="settingLogoUrl" placeholder="https://... ou assets/logo.png" />
+          </div>
+          <div class="form-group">
+            <label>Lien Discord du serveur</label>
+            <input type="url" id="settingDiscordUrl" placeholder="https://discord.gg/XXXXXXX" />
+            <small>Laissez vide pour masquer le bouton Discord dans la navigation.</small>
+          </div>
+          <div class="form-group">
+            <label>Image de bannière (arrière-plan du hero)</label>
+            <input type="text" id="settingBannerImg" placeholder="https://... ou assets/banner.png" />
+            <small>URL d'une image qui s'affichera derrière le titre sur la page d'accueil. Laissez vide pour le fond par défaut.</small>
+          </div>
+          <div class="form-group">
+            <label>Couleur d'accentuation</label>
+            <input type="color" id="settingAccentColor" value="#5865f2" />
+            <small>Couleur principale du site (boutons, bordures, numéros de règles).</small>
+          </div>
+          <div class="form-group">
+            <label>Thème par défaut</label>
+            <select id="settingTheme">
+              <option value="dark">Sombre</option>
+              <option value="light">Clair</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" onclick="saveSettings()">💾 Sauvegarder</button>
+          <p class="save-msg" id="settingsSaveMsg"></p>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- ===== MODALS ===== -->
+
+  <!-- Modal Ajouter Catégorie -->
+  <div id="modalAddCategory" class="modal-overlay hidden">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="modalCategoryTitle">Ajouter une catégorie</h3>
+        <button class="modal-close" onclick="closeModal('modalAddCategory')">✕</button>
+      </div>
+      <form id="formCategory" onsubmit="saveCategory(event)">
+        <input type="hidden" id="editCategoryId" />
+        <div class="form-group">
+          <label>Nom de la catégorie *</label>
+          <input type="text" id="catName" placeholder="Ex: Règlement Staff" required />
+        </div>
+        <div class="form-group">
+          <label>Icône (emoji) *</label>
+          <input type="text" id="catIcon" placeholder="Ex: 👮" required maxlength="4" />
+        </div>
+        <div class="form-group">
+          <label>Couleur d'accentuation</label>
+          <input type="color" id="catColor" value="#5865f2" />
+        </div>
+        <div class="form-group">
+          <label>Description courte</label>
+          <textarea id="catDesc" placeholder="Description de la catégorie..." rows="2"></textarea>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('modalAddCategory')">Annuler</button>
+          <button type="submit" class="btn btn-primary">Sauvegarder</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Ajouter Règle -->
+  <div id="modalAddRule" class="modal-overlay hidden">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="modalRuleTitle">Ajouter une règle</h3>
+        <button class="modal-close" onclick="closeModal('modalAddRule')">✕</button>
+      </div>
+      <form id="formRule" onsubmit="saveRule(event)">
+        <input type="hidden" id="editRuleId" />
+        <div class="form-group">
+          <label>Catégorie *</label>
+          <select id="ruleCategory" required>
+            <option value="">Choisir une catégorie</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Titre de la règle *</label>
+          <input type="text" id="ruleTitle" placeholder="Ex: Respect des joueurs" required />
+        </div>
+        <div class="form-group">
+          <label>Description *</label>
+          <textarea id="ruleDesc" placeholder="Détails de la règle..." rows="4" required></textarea>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('modalAddRule')">Annuler</button>
+          <button type="submit" class="btn btn-primary">Sauvegarder</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Ajouter Admin -->
+  <div id="modalAddAdmin" class="modal-overlay hidden">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="modalAdminTitle">Ajouter un administrateur</h3>
+        <button class="modal-close" onclick="closeModal('modalAddAdmin')">✕</button>
+      </div>
+      <form id="formAdmin" onsubmit="saveAdmin(event)">
+        <input type="hidden" id="editAdminId" />
+        <div class="form-group" id="adminUsernameGroup">
+          <label>Nom d'utilisateur *</label>
+          <input type="text" id="adminUsername" placeholder="Identifiant" required />
+        </div>
+        <div class="form-group">
+          <label>Mot de passe *</label>
+          <input type="password" id="adminPassword" placeholder="Mot de passe" />
+          <small id="adminPassHint">Laisser vide pour ne pas modifier (édition)</small>
+        </div>
+        <div class="form-group" id="adminRoleGroup">
+          <label>Rôle</label>
+          <select id="adminRole">
+            <option value="admin">Administrateur</option>
+            <option value="superadmin">Super Administrateur</option>
+          </select>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('modalAddAdmin')">Annuler</button>
+          <button type="submit" class="btn btn-primary">Sauvegarder</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Ajouter/Modifier Question -->
+  <div id="modalQuestion" class="modal-overlay hidden">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="modalQuestionTitle">Ajouter une question</h3>
+        <button class="modal-close" onclick="closeModal('modalQuestion')">✕</button>
+      </div>
+      <form id="formQuestion" onsubmit="saveQuestion(event)">
+        <input type="hidden" id="editQuestionId" />
+        <div class="form-group">
+          <label>Question *</label>
+          <textarea id="questionText" placeholder="Ex: Pourquoi veux-tu rejoindre le staff ?" rows="3" required></textarea>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('modalQuestion')">Annuler</button>
+          <button type="submit" class="btn btn-primary">Sauvegarder</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Voir Candidature -->
+  <div id="modalViewApp" class="modal-overlay hidden">
+    <div class="modal modal-lg">
+      <div class="modal-header">
+        <h3>Candidature</h3>
+        <button class="modal-close" onclick="closeModal('modalViewApp')">✕</button>
+      </div>
+      <div id="modalAppContent"></div>
+      <div class="modal-actions" id="modalAppActions"></div>
+    </div>
+  </div>
+
+  <!-- Modal Confirmation Suppression -->
+  <div id="modalConfirmDelete" class="modal-overlay hidden">
+    <div class="modal modal-sm">
+      <div class="modal-header">
+        <h3>Confirmer la suppression</h3>
+        <button class="modal-close" onclick="closeModal('modalConfirmDelete')">✕</button>
+      </div>
+      <p id="deleteConfirmText">Êtes-vous sûr de vouloir supprimer cet élément ?</p>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="closeModal('modalConfirmDelete')">Annuler</button>
+        <button class="btn btn-danger" id="confirmDeleteBtn">Supprimer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Membre Staff -->
+  <div id="modalStaffMember" class="modal-overlay hidden">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="modalStaffMemberTitle">Ajouter un membre staff</h3>
+        <button class="modal-close" onclick="closeModal('modalStaffMember')">✕</button>
+      </div>
+      <form id="formStaffMember" onsubmit="saveStaffMember(event)">
+        <input type="hidden" id="editStaffMemberId" />
+        <div class="form-group">
+          <label>Pseudo *</label>
+          <input type="text" id="smPseudo" placeholder="Pseudo en jeu" required />
+        </div>
+        <div class="form-group">
+          <label>Rôle *</label>
+          <input type="text" id="smRole" placeholder="Ex: Fondateur, Modérateur..." required />
+        </div>
+        <div class="form-group">
+          <label>URL de l'avatar</label>
+          <input type="text" id="smAvatar" placeholder="https://..." />
+        </div>
+        <div class="form-group">
+          <label>Description courte</label>
+          <textarea id="smDesc" rows="2" placeholder="Présentation courte..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Ordre d'affichage</label>
+          <input type="number" id="smOrder" value="0" min="0" />
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('modalStaffMember')">Annuler</button>
+          <button type="submit" class="btn btn-primary">Sauvegarder</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Sanction -->
+  <div id="modalSanction" class="modal-overlay hidden">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="modalSanctionTitle">Ajouter une sanction</h3>
+        <button class="modal-close" onclick="closeModal('modalSanction')">✕</button>
+      </div>
+      <form id="formSanction" onsubmit="saveSanction(event)">
+        <input type="hidden" id="editSanctionId" />
+        <div class="form-group">
+          <label>Infraction *</label>
+          <input type="text" id="sanctionInfraction" placeholder="Ex: RDM, Insultes..." required />
+        </div>
+        <div class="form-group">
+          <label>Sanction appliquée *</label>
+          <input type="text" id="sanctionResult" placeholder="Ex: Ban 24h, Kick..." required />
+        </div>
+        <div class="form-group">
+          <label>Gravité</label>
+          <select id="sanctionSeverity">
+            <option value="low">Faible</option>
+            <option value="medium">Moyen</option>
+            <option value="high">Élevé</option>
+            <option value="critical">Critique</option>
+          </select>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('modalSanction')">Annuler</button>
+          <button type="submit" class="btn btn-primary">Sauvegarder</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal FAQ -->
+  <div id="modalFaq" class="modal-overlay hidden">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="modalFaqTitle">Ajouter une question FAQ</h3>
+        <button class="modal-close" onclick="closeModal('modalFaq')">✕</button>
+      </div>
+      <form id="formFaq" onsubmit="saveFaqItem(event)">
+        <input type="hidden" id="editFaqId" />
+        <div class="form-group">
+          <label>Question *</label>
+          <input type="text" id="faqQuestion" placeholder="Ex: Comment rejoindre le serveur ?" required />
+        </div>
+        <div class="form-group">
+          <label>Réponse *</label>
+          <textarea id="faqAnswer" rows="4" placeholder="Réponse détaillée..." required></textarea>
+        </div>
+        <div class="form-group">
+          <label>Ordre d'affichage</label>
+          <input type="number" id="faqOrder" value="0" min="0" />
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('modalFaq')">Annuler</button>
+          <button type="submit" class="btn btn-primary">Sauvegarder</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Changelog -->
+  <div id="modalChangelog" class="modal-overlay hidden">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="modalChangelogTitle">Ajouter une entrée</h3>
+        <button class="modal-close" onclick="closeModal('modalChangelog')">✕</button>
+      </div>
+      <form id="formChangelog" onsubmit="saveChangelogEntry(event)">
+        <input type="hidden" id="editChangelogId" />
+        <div class="form-group">
+          <label>Version *</label>
+          <input type="text" id="clVersion" placeholder="Ex: 1.2.0" required />
+        </div>
+        <div class="form-group">
+          <label>Date *</label>
+          <input type="date" id="clDate" required />
+        </div>
+        <div class="form-group">
+          <label>Titre *</label>
+          <input type="text" id="clTitle" placeholder="Ex: Ajout du système de tickets" required />
+        </div>
+        <div class="form-group">
+          <label>Type</label>
+          <select id="clType">
+            <option value="major">Majeure</option>
+            <option value="minor">Mineure</option>
+            <option value="patch">Correctif</option>
+            <option value="hotfix">Hotfix</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Contenu *</label>
+          <textarea id="clContent" rows="4" placeholder="Détails de la mise à jour..." required></textarea>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('modalChangelog')">Annuler</button>
+          <button type="submit" class="btn btn-primary">Sauvegarder</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>

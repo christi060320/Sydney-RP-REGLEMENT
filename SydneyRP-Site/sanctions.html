@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sanctions</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="assets/logo.svg" type="image/svg+xml" />
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <div class="logo-area">
+        <a href="index.html" style="display:flex;align-items:center;gap:12px;text-decoration:none">
+          <img src="assets/logo.png" alt="Logo" class="header-logo" onerror="this.src='assets/logo.svg'" />
+          <span class="server-name" id="serverNameHeader">Mon Serveur</span>
+        </a>
+      </div>
+      <nav>
+        <a href="index.html" class="btn-back">← Retour</a>
+        <a href="#" id="navDiscordLink" class="btn-discord" style="display:none" target="_blank" rel="noopener">💬 Discord</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero hero-page hero-red" id="sanctionsHero">
+    <div class="hero-content">
+      <div class="hero-badge hero-badge-red">⚠️ Sanctions</div>
+      <h1 id="heroTitle">Tableau des Sanctions</h1>
+      <p id="heroSubtitle">Liste des infractions et des sanctions associées.</p>
+    </div>
+  </section>
+
+  <main class="container" id="sanctionsContainer">
+    <div class="sanctions-legend">
+      <span class="sev-dot sev-low"></span> Faible &nbsp;
+      <span class="sev-dot sev-medium"></span> Moyen &nbsp;
+      <span class="sev-dot sev-high"></span> Élevé &nbsp;
+      <span class="sev-dot sev-critical"></span> Critique
+    </div>
+    <div class="sanctions-list" id="sanctionsList"></div>
+  </main>
+
+  <footer><p id="footerText">© 2026 Mon Serveur — Tous droits réservés</p></footer>
+
+  <script src="data.js"></script>
+  <script src="pages.js"></script>
+</body>
+</html>

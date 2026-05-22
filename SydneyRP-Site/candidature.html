@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Candidature Staff</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="candidature.css" />
+  <link rel="icon" href="assets/logo.svg" type="image/svg+xml" />
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <div class="logo-area">
+        <a href="index.html" style="display:flex;align-items:center;gap:12px;text-decoration:none">
+          <img src="assets/logo.png" alt="Logo" class="header-logo" onerror="this.src='assets/logo.svg'" />
+          <span class="server-name" id="serverNameHeader">Mon Serveur</span>
+        </a>
+      </div>
+      <nav>
+        <a href="index.html" class="btn-back">← Retour</a>
+        <a href="#" id="navDiscordLink" class="btn-discord" style="display:none" target="_blank" rel="noopener">💬 Discord</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero hero-staff">
+    <div class="hero-content">
+      <div class="hero-badge">👮 Recrutement Staff</div>
+      <h1 id="heroTitle">Rejoindre l'équipe Staff</h1>
+      <p id="heroSubtitle">Remplis le formulaire ci-dessous pour soumettre ta candidature.</p>
+    </div>
+  </section>
+  <main class="cand-container">
+
+    <!-- ===== VÉRIFIER UNE CANDIDATURE ===== -->
+    <div id="stateCheck" class="cand-check-box">
+      <div class="check-header">
+        <span class="check-icon">🔍</span>
+        <div>
+          <strong>Déjà candidaté ?</strong>
+          <p>Entre ton code de suivi pour voir le statut de ta candidature.</p>
+        </div>
+      </div>
+      <div class="check-form">
+        <input type="text" id="trackingCodeInput" placeholder="Ex: APP-1234567-abcde" class="check-input" />
+        <button class="btn btn-secondary" onclick="checkStatus()">Vérifier</button>
+      </div>
+      <div id="trackingResult"></div>
+    </div>
+
+    <!-- ===== FORMULAIRE ===== -->
+    <div id="stateForm">
+      <div class="cand-divider">Nouvelle candidature</div>
+      <form id="applicationForm" onsubmit="submitApplication(event)">
+        <div id="questionsContainer"></div>
+        <div class="cand-submit-area">
+          <button type="submit" class="btn btn-primary btn-lg">📨 Envoyer ma candidature</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- ===== SUCCÈS — affiche le code ===== -->
+    <div id="stateSuccess" class="cand-success hidden">
+      <div class="success-icon">✅</div>
+      <h2>Candidature envoyée !</h2>
+      <p>Merci ! L'équipe staff examinera ta candidature dans les plus brefs délais.</p>
+      <div class="tracking-code-box">
+        <p>📋 Ton code de suivi :</p>
+        <div class="tracking-code" id="displayTrackingCode">—</div>
+        <p class="tracking-hint">Conserve ce code pour suivre le statut de ta candidature sur cette page.</p>
+      </div>
+      <a href="index.html" class="btn btn-secondary" style="margin-top:24px">← Retour à l'accueil</a>
+    </div>
+
+    <!-- ===== CANDIDATURES FERMÉES ===== -->
+    <div id="stateClosed" class="cand-closed hidden">
+      <div class="closed-icon">🔒</div>
+      <h2>Candidatures fermées</h2>
+      <p>Le recrutement staff est actuellement fermé. Revenez plus tard !</p>
+      <a href="index.html" class="btn btn-secondary" style="margin-top:24px">← Retour à l'accueil</a>
+    </div>
+
+  </main>
+
+  <footer>
+    <p id="footerText">© 2026 Mon Serveur — Tous droits réservés</p>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="candidature.js"></script>
+</body>
+</html>
