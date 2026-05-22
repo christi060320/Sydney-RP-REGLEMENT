@@ -1,0 +1,353 @@
+/* ============================================================
+   CANDIDATURE.CSS — Page de candidature staff
+   ============================================================ */
+
+/* ---- HERO STAFF ---- */
+.hero-staff {
+  background: linear-gradient(135deg, #0a0a0a 0%, #0f1a2e 40%, #0a1a0f 100%);
+  padding: 64px 24px;
+  text-align: center;
+  border-bottom: 1px solid #1e1e1e;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-staff::before {
+  content: "";
+  position: absolute;
+  top: -60px; left: 50%;
+  transform: translateX(-50%);
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(87,242,135,.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(87,242,135,.12);
+  border: 1px solid rgba(87,242,135,.25);
+  color: #57f287;
+  padding: 6px 18px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 18px;
+  letter-spacing: .03em;
+}
+
+.hero-staff h1 {
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 12px;
+  line-height: 1.2;
+}
+
+.hero-staff p {
+  color: #777;
+  font-size: 1rem;
+  max-width: 520px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* ---- CONTAINER ---- */
+.cand-container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+
+/* ---- BLOC VÉRIFICATION STATUT ---- */
+.cand-check-box {
+  background: #111;
+  border: 1px solid #222;
+  border-radius: 14px;
+  padding: 22px 24px;
+  margin-bottom: 36px;
+}
+
+.check-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.check-icon { font-size: 1.5rem; flex-shrink: 0; }
+
+.check-header strong {
+  display: block;
+  color: #e8e8e8;
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.check-header p {
+  color: #555;
+  font-size: 13px;
+  margin: 0;
+}
+
+.check-form {
+  display: flex;
+  gap: 10px;
+}
+
+.check-input {
+  flex: 1;
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-radius: 8px;
+  color: #e8e8e8;
+  padding: 10px 14px;
+  font-size: 14px;
+  font-family: 'Courier New', monospace;
+  letter-spacing: .06em;
+  outline: none;
+  transition: border-color .2s;
+}
+
+.check-input:focus { border-color: #5865f2; }
+.check-input::placeholder { color: #444; letter-spacing: .02em; }
+
+.track-error {
+  color: #ed4245;
+  font-size: 13px;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Résultat de suivi */
+.track-result-card {
+  margin-top: 14px;
+  border-radius: 12px;
+  padding: 20px 22px;
+  border: 1px solid transparent;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.track-pending  { background: rgba(254,231,92,.06);  border-color: rgba(254,231,92,.18); }
+.track-accepted { background: rgba(87,242,135,.06);  border-color: rgba(87,242,135,.2); }
+.track-rejected { background: rgba(237,66,69,.06);   border-color: rgba(237,66,69,.18); }
+
+.track-result-icon { font-size: 2.2rem; flex-shrink: 0; line-height: 1; }
+
+.track-result-status {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 3px;
+}
+
+.track-result-date {
+  font-size: 12px;
+  color: #555;
+  margin-bottom: 8px;
+}
+
+.track-result-msg {
+  color: #999;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* ---- SÉPARATEUR ---- */
+.cand-divider {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 28px;
+  color: #333;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+
+.cand-divider::before,
+.cand-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: #222;
+}
+
+/* ---- QUESTIONS ---- */
+.cand-question {
+  background: #111;
+  border: 1px solid #222;
+  border-radius: 12px;
+  padding: 20px 22px;
+  margin-bottom: 12px;
+  transition: border-color .2s, box-shadow .2s;
+}
+
+.cand-question:focus-within {
+  border-color: #5865f2;
+  box-shadow: 0 0 0 3px rgba(88,101,242,.08);
+}
+
+.cand-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #ccc;
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+
+.cand-num {
+  background: #5865f2;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.cand-required { color: #ed4245; margin-left: 2px; }
+
+.cand-textarea {
+  width: 100%;
+  background: #161616;
+  border: 1px solid #2a2a2a;
+  border-radius: 8px;
+  color: #e8e8e8;
+  padding: 11px 14px;
+  font-size: 14px;
+  font-family: inherit;
+  line-height: 1.6;
+  resize: vertical;
+  min-height: 80px;
+  outline: none;
+  transition: border-color .2s;
+  white-space: pre-wrap;
+}
+
+.cand-textarea:focus { border-color: #5865f2; }
+.cand-textarea::placeholder { color: #444; }
+
+/* ---- BOUTON SUBMIT ---- */
+.cand-submit-area {
+  margin-top: 28px;
+  display: flex;
+  justify-content: center;
+}
+
+.btn-lg {
+  padding: 14px 40px;
+  font-size: 15px;
+  font-weight: 700;
+  border-radius: 10px;
+  letter-spacing: .02em;
+}
+
+/* ---- SUCCÈS ---- */
+.cand-success {
+  text-align: center;
+  padding: 48px 24px;
+}
+
+.success-icon {
+  font-size: 4rem;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.cand-success h2 {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+.cand-success > p {
+  color: #666;
+  font-size: 15px;
+  margin-bottom: 0;
+}
+
+/* Code de suivi */
+.tracking-code-box {
+  background: #111;
+  border: 1px solid #222;
+  border-radius: 14px;
+  padding: 24px 28px;
+  margin: 28px auto 0;
+  max-width: 420px;
+  text-align: center;
+}
+
+.tracking-code-box > p {
+  color: #666;
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+
+.tracking-code {
+  font-family: 'Courier New', monospace;
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: #5865f2;
+  letter-spacing: .14em;
+  background: rgba(88,101,242,.1);
+  border: 1px dashed rgba(88,101,242,.35);
+  border-radius: 10px;
+  padding: 12px 24px;
+  display: block;
+  margin-bottom: 12px;
+  user-select: all;
+  cursor: text;
+}
+
+.tracking-hint {
+  color: #444;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* ---- FERMÉ ---- */
+.cand-closed {
+  text-align: center;
+  padding: 60px 24px;
+}
+
+.closed-icon {
+  font-size: 3.5rem;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.cand-closed h2 {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+.cand-closed p { color: #555; font-size: 15px; }
+
+/* ---- RESPONSIVE ---- */
+@media (max-width: 640px) {
+  .hero-staff h1 { font-size: 1.7rem; }
+  .cand-container { padding: 28px 16px 60px; }
+  .check-form { flex-direction: column; }
+  .check-input { width: 100%; }
+  .tracking-code { font-size: 1.2rem; letter-spacing: .08em; }
+}
